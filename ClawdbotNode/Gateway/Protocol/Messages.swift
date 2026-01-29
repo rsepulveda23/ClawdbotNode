@@ -232,11 +232,11 @@ struct RequestBuilder {
                     "id": "clawdbot-ios",
                     "version": "1.0.0",
                     "platform": "ios",
-                    "mode": "node"
+                    "mode": "hybrid"  // Hybrid mode: node capabilities + client chat
                 ],
-                "role": "node",
-                "scopes": [] as [String],
-                "caps": ["camera", "canvas", "screen", "location", "voice"],
+                "role": "node+client",  // Dual role: node for hardware, client for chat
+                "scopes": ["chat"] as [String],  // Request chat scope
+                "caps": ["camera", "canvas", "screen", "location", "voice", "chat"],
                 "commands": [
                     "camera.snap", "camera.clip", "camera.list",
                     "canvas.navigate", "canvas.snapshot", "canvas.eval", "canvas.present", "canvas.hide",

@@ -399,12 +399,13 @@ class GatewayClient: ObservableObject {
 
         // Build the auth payload that needs to be signed
         // Format: v2|deviceId|clientId|clientMode|role|scopes|signedAtMs|token|nonce
+        // Using hybrid mode and node+client role for dual functionality
         let authPayload = DeviceIdentity.buildAuthPayload(
             deviceId: deviceId,
             clientId: "clawdbot-ios",
-            clientMode: "node",
-            role: "node",
-            scopes: [],
+            clientMode: "hybrid",
+            role: "node+client",
+            scopes: ["chat"],
             signedAtMs: timestamp,
             token: token,
             nonce: nonce
