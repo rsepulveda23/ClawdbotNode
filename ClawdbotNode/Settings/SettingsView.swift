@@ -34,7 +34,7 @@ struct SettingsView: View {
                                         .foregroundColor(.white)
                                         .autocapitalization(.none)
                                         .disableAutocorrection(true)
-                                        .onChange(of: editedURL) { _, newValue in
+                                        .onChange(of: editedURL) { newValue in
                                             appSettings.gatewayURL = newValue
                                         }
                                 }
