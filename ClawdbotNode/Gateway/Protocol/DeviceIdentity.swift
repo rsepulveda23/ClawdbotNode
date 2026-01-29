@@ -53,13 +53,15 @@ class DeviceIdentity {
     }
 
     /// Sign a nonce to prove device identity
+    /// The gateway expects a DER-encoded ECDSA signature over the SHA256 hash of the nonce
     func sign(nonce: String) -> String {
         guard let key = privateKey else { return "" }
 
         let data = Data(nonce.utf8)
         do {
             let signature = try key.signature(for: data)
-            return signature.rawRepresentation.base64EncodedString()
+            // Return DER-encoded signature for compatibility with gateway
+            return signature.derRepresentation.base64EncodedString()
         } catch {
             print("Failed to sign nonce: \(error)")
             return ""
