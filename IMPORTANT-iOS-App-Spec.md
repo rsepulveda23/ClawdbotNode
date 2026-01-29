@@ -42,6 +42,19 @@ A **node** is a companion device that connects to the Gateway and exposes capabi
 
 ---
 
+## YOUR ACTUAL CONNECTION DETAILS
+
+```
+Gateway URL:     ws://100.122.199.82:18789
+Tailscale IP:    100.122.199.82
+Port:            18789
+Owner:           Ruben Sepulveda
+```
+
+The iPhone must have **Tailscale installed and logged into the same tailnet** as the Mac.
+
+---
+
 ## Network Architecture
 
 ```
@@ -369,7 +382,8 @@ The app needs a Settings screen with these toggles:
 
 ### Connection
 - **Gateway URL**: Text field for `ws://<ip>:18789`
-  - Consider auto-discovery via Tailscale
+  - **Default value**: `ws://100.122.199.82:18789`
+  - Consider auto-discovery via Tailscale in future
 - **Device Token**: Display/copy (for debugging)
 - **Connection Status**: Show connected/disconnected state
 
@@ -397,6 +411,27 @@ Add to `Info.plist`:
 ```
 
 For screen recording, you'll need to use `ReplayKit`.
+
+---
+
+## Xcode Project Setup
+
+When creating the Xcode project:
+
+- **Product Name**: ClawdbotNode
+- **Team**: Your Apple Developer account (or Personal Team for testing)
+- **Organization Identifier**: com.clawdbot (or your own)
+- **Bundle Identifier**: com.clawdbot.node (auto-generated)
+- **Interface**: SwiftUI
+- **Language**: Swift
+- **Storage**: None (we'll use UserDefaults/Keychain directly)
+- **Include Tests**: Optional
+
+**Deployment Target**: iOS 16.0+ (for modern async/await and WebSocket APIs)
+
+**Capabilities to add** (in Signing & Capabilities):
+- Background Modes → Background fetch (for potential future push-triggered location)
+- Keychain Sharing (optional, for secure token storage)
 
 ---
 
