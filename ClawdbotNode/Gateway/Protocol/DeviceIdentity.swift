@@ -2,25 +2,28 @@ import Foundation
 import CryptoKit
 import Security
 
-/// Manages device identity using P-256 keypair stored in Keychain
+/// Manages device identity using Ed25519 keypair stored in Keychain
+/// The gateway uses Ed25519 for device authentication
 class DeviceIdentity {
     static let shared = DeviceIdentity()
 
     private let keychainService = "com.clawdbot.node"
-    private let privateKeyTag = "com.clawdbot.node.privateKey"
+    private let privateKeyTag = "com.clawdbot.node.ed25519.privateKey"
 
-    private var privateKey: P256.Signing.PrivateKey?
+    private var privateKey: Curve25519.Signing.PrivateKey?
 
     var deviceId: String {
         return publicKeyFingerprint
     }
 
-    var publicKeyBase64: String {
+    /// Returns the raw 32-byte public key as base64url (no padding)
+    var publicKeyBase64Url: String {
         guard let key = privateKey else { return "" }
         let publicKeyData = key.publicKey.rawRepresentation
-        return publicKeyData.base64EncodedString()
+        return base64UrlEncode(publicKeyData)
     }
 
+    /// SHA256 hash of the raw public key bytes, hex encoded
     private var publicKeyFingerprint: String {
         guard let key = privateKey else { return "" }
         let publicKeyData = key.publicKey.rawRepresentation
@@ -36,7 +39,7 @@ class DeviceIdentity {
         // Try to load existing key from Keychain
         if let keyData = loadPrivateKeyFromKeychain() {
             do {
-                privateKey = try P256.Signing.PrivateKey(rawRepresentation: keyData)
+                privateKey = try Curve25519.Signing.PrivateKey(rawRepresentation: keyData)
                 print("Loaded existing device identity: \(deviceId.prefix(16))...")
                 return
             } catch {
@@ -44,8 +47,8 @@ class DeviceIdentity {
             }
         }
 
-        // Create new keypair
-        privateKey = P256.Signing.PrivateKey()
+        // Create new Ed25519 keypair
+        privateKey = Curve25519.Signing.PrivateKey()
         if let key = privateKey {
             savePrivateKeyToKeychain(key.rawRepresentation)
             print("Created new device identity: \(deviceId.prefix(16))...")
@@ -72,19 +75,29 @@ class DeviceIdentity {
     }
 
     /// Sign the auth payload to prove device identity
-    /// The gateway expects a DER-encoded ECDSA signature
+    /// Returns base64url encoded Ed25519 signature (no padding)
     func sign(payload: String) -> String {
         guard let key = privateKey else { return "" }
 
         let data = Data(payload.utf8)
         do {
             let signature = try key.signature(for: data)
-            // Return DER-encoded signature for compatibility with gateway
-            return signature.derRepresentation.base64EncodedString()
+            // Return base64url encoded signature (gateway expects this format)
+            return base64UrlEncode(signature)
         } catch {
             print("Failed to sign payload: \(error)")
             return ""
         }
+    }
+
+    // MARK: - Base64URL Encoding
+
+    /// Encode data as base64url (no padding), as expected by the gateway
+    private func base64UrlEncode(_ data: Data) -> String {
+        return data.base64EncodedString()
+            .replacingOccurrences(of: "+", with: "-")
+            .replacingOccurrences(of: "/", with: "_")
+            .replacingOccurrences(of: "=", with: "")
     }
 
     // MARK: - Keychain Operations
@@ -129,6 +142,17 @@ class DeviceIdentity {
         if status != errSecSuccess {
             print("Failed to save private key to Keychain: \(status)")
         }
+    }
+
+    /// Force regenerate the device identity (creates new keypair)
+    func regenerateIdentity() {
+        privateKey = Curve25519.Signing.PrivateKey()
+        if let key = privateKey {
+            savePrivateKeyToKeychain(key.rawRepresentation)
+            print("Regenerated device identity: \(deviceId.prefix(16))...")
+        }
+        // Clear any stored device token since identity changed
+        DeviceTokenStorage.token = nil
     }
 }
 

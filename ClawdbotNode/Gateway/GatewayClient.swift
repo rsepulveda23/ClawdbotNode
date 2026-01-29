@@ -399,7 +399,7 @@ class GatewayClient: ObservableObject {
 
         let request = RequestBuilder.connect(
             deviceId: deviceId,
-            publicKey: DeviceIdentity.shared.publicKeyBase64,
+            publicKey: DeviceIdentity.shared.publicKeyBase64Url,
             signature: signature,
             nonce: nonce,
             signedAt: timestamp,
