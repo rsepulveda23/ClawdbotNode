@@ -8,6 +8,7 @@ class ScreenRecordCapability: NSObject {
     private var audioInput: AVAssetWriterInput?
     private var tempVideoURL: URL?
 
+    @MainActor
     func record(durationMs: Int, fps: Int, includeAudio: Bool) async throws -> [String: Any] {
         // Check if screen recording is enabled in settings
         guard AppSettings.shared.allowScreenRecording else {
@@ -21,6 +22,10 @@ class ScreenRecordCapability: NSObject {
             throw NodeError(code: .screenRecordingPermissionRequired, message: "Screen recording not available")
         }
 
+        // Capture screen dimensions on main actor
+        let screenWidth = Int(UIScreen.main.bounds.width * UIScreen.main.scale)
+        let screenHeight = Int(UIScreen.main.bounds.height * UIScreen.main.scale)
+
         // Create temp file
         let tempDir = FileManager.default.temporaryDirectory
         let fileName = UUID().uuidString + ".mp4"
@@ -33,8 +38,8 @@ class ScreenRecordCapability: NSObject {
         // Video settings
         let videoSettings: [String: Any] = [
             AVVideoCodecKey: AVVideoCodecType.h264,
-            AVVideoWidthKey: Int(UIScreen.main.bounds.width * UIScreen.main.scale),
-            AVVideoHeightKey: Int(UIScreen.main.bounds.height * UIScreen.main.scale),
+            AVVideoWidthKey: screenWidth,
+            AVVideoHeightKey: screenHeight,
             AVVideoCompressionPropertiesKey: [
                 AVVideoAverageBitRateKey: 2_000_000,
                 AVVideoMaxKeyFrameIntervalKey: fps

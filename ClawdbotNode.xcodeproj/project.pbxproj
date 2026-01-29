@@ -49,7 +49,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00000000000000000000000C /* Root */ = {
+		00000000000000000000000C = {
 			isa = PBXGroup;
 			children = (
 				00000000000000000000000D /* ClawdbotNode */,
@@ -96,15 +96,6 @@
 			path = Gateway;
 			sourceTree = "<group>";
 		};
-		00000000000000000000002B /* Protocol */ = {
-			isa = PBXGroup;
-			children = (
-				22222222222222222222222D /* Messages.swift */,
-				22222222222222222222222F /* DeviceIdentity.swift */,
-			);
-			path = Protocol;
-			sourceTree = "<group>";
-		};
 		00000000000000000000001C /* Capabilities */ = {
 			isa = PBXGroup;
 			children = (
@@ -139,6 +130,15 @@
 				1111111111111111111111AA /* Info.plist */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		00000000000000000000002B /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
+				22222222222222222222222D /* Messages.swift */,
+				22222222222222222222222F /* DeviceIdentity.swift */,
+			);
+			path = Protocol;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -184,7 +184,7 @@
 				en,
 				Base,
 			);
-			mainGroup = 00000000000000000000000C /* Root */;
+			mainGroup = 00000000000000000000000C;
 			productRefGroup = 00000000000000000000000E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -353,7 +353,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 3YZEZM3CS5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClawdbotNode/Resources/Info.plist;
@@ -384,7 +384,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 3YZEZM3CS5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ClawdbotNode/Resources/Info.plist;

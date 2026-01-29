@@ -85,7 +85,7 @@ struct ContentView: View {
             }
         }
         .preferredColorScheme(.dark)
-        .onChange(of: gatewayClient.canvasVisible) { _, visible in
+        .onChange(of: gatewayClient.canvasVisible) { visible in
             withAnimation(.spring(response: 0.3)) {
                 showCanvas = visible
             }
