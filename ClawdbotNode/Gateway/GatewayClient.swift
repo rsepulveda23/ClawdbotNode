@@ -378,13 +378,32 @@ class GatewayClient: ObservableObject {
     // MARK: - Sending Messages
 
     private func sendConnectRequest(nonce: String) {
-        let signature = DeviceIdentity.shared.sign(nonce: nonce)
+        let timestamp = Int64(Date().timeIntervalSince1970 * 1000)
+        let deviceId = DeviceIdentity.shared.deviceId
+        let token = DeviceTokenStorage.token
+
+        // Build the auth payload that needs to be signed
+        // Format: v2|deviceId|clientId|clientMode|role|scopes|signedAtMs|token|nonce
+        let authPayload = DeviceIdentity.buildAuthPayload(
+            deviceId: deviceId,
+            clientId: "clawdbot-ios",
+            clientMode: "node",
+            role: "node",
+            scopes: [],
+            signedAtMs: timestamp,
+            token: token,
+            nonce: nonce
+        )
+
+        let signature = DeviceIdentity.shared.sign(payload: authPayload)
+
         let request = RequestBuilder.connect(
-            deviceId: DeviceIdentity.shared.deviceId,
+            deviceId: deviceId,
             publicKey: DeviceIdentity.shared.publicKeyBase64,
             signature: signature,
             nonce: nonce,
-            deviceToken: DeviceTokenStorage.token
+            signedAt: timestamp,
+            deviceToken: token
         )
         sendMessage(request)
     }

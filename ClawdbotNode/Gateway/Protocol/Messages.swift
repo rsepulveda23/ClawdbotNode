@@ -212,10 +212,9 @@ struct RequestBuilder {
         publicKey: String,
         signature: String,
         nonce: String,
+        signedAt: Int64,
         deviceToken: String?
     ) -> [String: Any] {
-        let timestamp = Int64(Date().timeIntervalSince1970 * 1000)
-
         // Build auth object - only include token if we have one
         var auth: [String: Any] = [:]
         if let token = deviceToken, !token.isEmpty {
@@ -252,7 +251,7 @@ struct RequestBuilder {
                     "id": deviceId,
                     "publicKey": publicKey,
                     "signature": signature,
-                    "signedAt": timestamp,
+                    "signedAt": signedAt,
                     "nonce": nonce
                 ]
             ] as [String: Any]

@@ -52,18 +52,37 @@ class DeviceIdentity {
         }
     }
 
-    /// Sign a nonce to prove device identity
-    /// The gateway expects a DER-encoded ECDSA signature over the SHA256 hash of the nonce
-    func sign(nonce: String) -> String {
+    /// Build the device auth payload string that must be signed
+    /// Format: version|deviceId|clientId|clientMode|role|scopes|signedAtMs|token|nonce
+    static func buildAuthPayload(
+        deviceId: String,
+        clientId: String,
+        clientMode: String,
+        role: String,
+        scopes: [String],
+        signedAtMs: Int64,
+        token: String?,
+        nonce: String
+    ) -> String {
+        let version = "v2"  // v2 includes nonce
+        let scopesStr = scopes.joined(separator: ",")
+        let tokenStr = token ?? ""
+
+        return [version, deviceId, clientId, clientMode, role, scopesStr, String(signedAtMs), tokenStr, nonce].joined(separator: "|")
+    }
+
+    /// Sign the auth payload to prove device identity
+    /// The gateway expects a DER-encoded ECDSA signature
+    func sign(payload: String) -> String {
         guard let key = privateKey else { return "" }
 
-        let data = Data(nonce.utf8)
+        let data = Data(payload.utf8)
         do {
             let signature = try key.signature(for: data)
             // Return DER-encoded signature for compatibility with gateway
             return signature.derRepresentation.base64EncodedString()
         } catch {
-            print("Failed to sign nonce: \(error)")
+            print("Failed to sign payload: \(error)")
             return ""
         }
     }
