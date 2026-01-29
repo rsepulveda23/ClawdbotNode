@@ -26,7 +26,8 @@ class AppSettings: ObservableObject {
     }
 
     // MARK: - Default Gateway URL
-    static let defaultGatewayURL = "ws://100.122.199.82:18789"
+    // Using Tailscale Serve (HTTPS proxy) for secure connection
+    static let defaultGatewayURL = "wss://rubens-macbook-air.taildb1e69.ts.net"
 
     // MARK: - Published Properties
 
