@@ -216,6 +216,12 @@ struct RequestBuilder {
     ) -> [String: Any] {
         let timestamp = Int64(Date().timeIntervalSince1970 * 1000)
 
+        // Build auth object - only include token if we have one
+        var auth: [String: Any] = [:]
+        if let token = deviceToken, !token.isEmpty {
+            auth["token"] = token
+        }
+
         return [
             "type": "req",
             "id": UUID().uuidString,
@@ -224,13 +230,13 @@ struct RequestBuilder {
                 "minProtocol": 3,
                 "maxProtocol": 3,
                 "client": [
-                    "id": "ios-node",
+                    "id": "clawdbot-ios",
                     "version": "1.0.0",
                     "platform": "ios",
                     "mode": "node"
                 ],
                 "role": "node",
-                "scopes": [],
+                "scopes": [] as [String],
                 "caps": ["camera", "canvas", "screen", "location", "voice"],
                 "commands": [
                     "camera.snap", "camera.clip", "camera.list",
@@ -239,9 +245,7 @@ struct RequestBuilder {
                     "location.get"
                 ],
                 "permissions": AppSettings.shared.currentPermissions,
-                "auth": [
-                    "token": deviceToken as Any
-                ],
+                "auth": auth,
                 "locale": Locale.current.identifier,
                 "userAgent": "clawdbot-ios/1.0.0",
                 "device": [
