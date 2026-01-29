@@ -19,6 +19,9 @@
 		44444444444444444444444A /* CanvasWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44444444444444444444444B /* CanvasWebView.swift */; };
 		55555555555555555555555A /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55555555555555555555555B /* AppSettings.swift */; };
 		55555555555555555555555C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55555555555555555555555D /* SettingsView.swift */; };
+		66666666666666666666666A /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66666666666666666666666B /* ChatMessage.swift */; };
+		66666666666666666666666C /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66666666666666666666666D /* ChatViewModel.swift */; };
+		66666666666666666666666E /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66666666666666666666666F /* ChatView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +39,9 @@
 		44444444444444444444444B /* CanvasWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasWebView.swift; sourceTree = "<group>"; };
 		55555555555555555555555B /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		55555555555555555555555D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		66666666666666666666666B /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		66666666666666666666666D /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		66666666666666666666666F /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +67,7 @@
 			isa = PBXGroup;
 			children = (
 				00000000000000000000001A /* App */,
+				00000000000000000000003C /* Chat */,
 				00000000000000000000001B /* Gateway */,
 				00000000000000000000001C /* Capabilities */,
 				00000000000000000000001D /* Canvas */,
@@ -139,6 +146,16 @@
 				22222222222222222222222F /* DeviceIdentity.swift */,
 			);
 			path = Protocol;
+			sourceTree = "<group>";
+		};
+		00000000000000000000003C /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				66666666666666666666666B /* ChatMessage.swift */,
+				66666666666666666666666D /* ChatViewModel.swift */,
+				66666666666666666666666F /* ChatView.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -221,6 +238,9 @@
 				44444444444444444444444A /* CanvasWebView.swift in Sources */,
 				55555555555555555555555A /* AppSettings.swift in Sources */,
 				55555555555555555555555C /* SettingsView.swift in Sources */,
+				66666666666666666666666A /* ChatMessage.swift in Sources */,
+				66666666666666666666666C /* ChatViewModel.swift in Sources */,
+				66666666666666666666666E /* ChatView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

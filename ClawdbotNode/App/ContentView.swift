@@ -3,7 +3,49 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var gatewayClient: GatewayClient
     @EnvironmentObject var appSettings: AppSettings
-    @State private var showSettings = false
+    @State private var selectedTab = 0
+
+    var body: some View {
+        TabView(selection: $selectedTab) {
+            // Chat Tab
+            ChatView()
+                .tabItem {
+                    Label("Chat", systemImage: "message.fill")
+                }
+                .tag(0)
+
+            // Node Tab (original home view)
+            NodeHomeView()
+                .environmentObject(gatewayClient)
+                .environmentObject(appSettings)
+                .tabItem {
+                    Label("Node", systemImage: "cpu.fill")
+                }
+                .tag(1)
+
+            // Settings Tab
+            SettingsView()
+                .environmentObject(gatewayClient)
+                .environmentObject(appSettings)
+                .tabItem {
+                    Label("Settings", systemImage: "gearshape.fill")
+                }
+                .tag(2)
+        }
+        .preferredColorScheme(.dark)
+        .onAppear {
+            // Auto-connect if enabled
+            if appSettings.autoConnect && gatewayClient.connectionState == .disconnected {
+                gatewayClient.connect()
+            }
+        }
+    }
+}
+
+// MARK: - Node Home View (Original ContentView content)
+struct NodeHomeView: View {
+    @EnvironmentObject var gatewayClient: GatewayClient
+    @EnvironmentObject var appSettings: AppSettings
     @State private var showCanvas = false
 
     var body: some View {
@@ -67,24 +109,8 @@ struct ContentView: View {
                             )
                         )
                 }
-
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button {
-                        showSettings = true
-                    } label: {
-                        Image(systemName: "gearshape.fill")
-                            .font(.system(size: 18))
-                            .foregroundColor(.white.opacity(0.8))
-                    }
-                }
-            }
-            .sheet(isPresented: $showSettings) {
-                SettingsView()
-                    .environmentObject(gatewayClient)
-                    .environmentObject(appSettings)
             }
         }
-        .preferredColorScheme(.dark)
         .onChange(of: gatewayClient.canvasVisible) { visible in
             withAnimation(.spring(response: 0.3)) {
                 showCanvas = visible

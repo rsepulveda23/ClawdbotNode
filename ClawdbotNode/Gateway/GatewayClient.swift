@@ -154,6 +154,21 @@ class GatewayClient: ObservableObject {
                 challengeNonce = nonce
                 sendConnectRequest(nonce: nonce)
             }
+
+        case "chat.message":
+            // Handle incoming chat message from assistant
+            if let payload = json["payload"] as? [String: Any] {
+                let content = payload["text"] as? String ?? payload["content"] as? String ?? ""
+                let messageId = payload["id"] as? String ?? UUID().uuidString
+
+                NotificationCenter.default.post(
+                    name: .chatMessageReceived,
+                    object: nil,
+                    userInfo: ["content": content, "id": messageId]
+                )
+                logActivity(command: "chat.message", success: true, icon: "message.fill", color: .purple)
+            }
+
         default:
             print("Unhandled event: \(eventName)")
         }
@@ -431,6 +446,53 @@ class GatewayClient: ObservableObject {
         } catch {
             print("Failed to serialize message: \(error)")
         }
+    }
+
+    // MARK: - Chat Methods
+
+    /// Send a chat message to the gateway
+    func sendChatMessage(
+        text: String?,
+        imageBase64: String? = nil,
+        audioBase64: String? = nil,
+        sessionKey: String = "ios-app"
+    ) async {
+        guard connectionState == .connected else {
+            print("Cannot send chat message - not connected")
+            return
+        }
+
+        var params: [String: Any] = [
+            "sessionKey": sessionKey
+        ]
+
+        if let text = text, !text.isEmpty {
+            params["text"] = text
+        }
+
+        if let imageBase64 = imageBase64 {
+            params["image"] = [
+                "base64": imageBase64,
+                "mimeType": "image/jpeg"
+            ]
+        }
+
+        if let audioBase64 = audioBase64 {
+            params["audio"] = [
+                "base64": audioBase64,
+                "mimeType": "audio/m4a"
+            ]
+        }
+
+        let request: [String: Any] = [
+            "type": "req",
+            "id": UUID().uuidString,
+            "method": "chat.send",
+            "params": params
+        ]
+
+        sendMessage(request)
+        logActivity(command: "chat.send", success: true, icon: "paperplane.fill", color: .blue)
     }
 
     // MARK: - Keepalive
